@@ -11,42 +11,56 @@ const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
 
 // States
-const maxPage = 1;
-const page = 1;
-const searchQuery = "";
-
-const cardsUrl =
-  "https://rickandmortyapi.com/api/character/1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20?page=<pageIndex>";
+let maxPage = 42;
+let page = 1;
+let searchQuery = "";
+let urlAll = `https://rickandmortyapi.com/api/character/?page=${page}`;
+pagination.textContent = `${page} / ${maxPage}`;
 
 const fetchCharacters = async () => {
-  const cards = document.querySelector('[data-js="card-container"]');
   try {
-    const response = await fetch(cardsUrl);
+    const response = await fetch(urlAll);
     const jsonData = await response.json();
+    const results = await jsonData.results;
 
-    console.log(jsonData);
-
-    cards.innerHTML = "";
-
-    jsonData.forEach((character) => {
-      const image = character.image;
-      console.log(character.image);
-      const name = character.name;
-      console.log(character.name);
-      const status = character.status;
-      console.log(character.status);
-      const type = character.type;
-      console.log(character.type);
-      const occurrences = character.episode.length;
-      console.log(occurrences);
-
-      createCharacterCard(image, name, status, type, occurrences);
-    });
+    createCharacterCards(results);
   } catch {
     console.log("Something went wrong");
   }
 };
+
+nextButton.addEventListener("click", () => {
+  if (page >= maxPage) {
+    return;
+  }
+  page++;
+  urlAll = `https://rickandmortyapi.com/api/character/?page=${page}`;
+  fetchCharacters();
+  pagination.textContent = `${page} / ${maxPage}`;
+});
+
+prevButton.addEventListener("click", () => {
+  if (page <= 1) {
+    return;
+  }
+  page--;
+  urlAll = `https://rickandmortyapi.com/api/character/?page=${page}`;
+  fetchCharacters();
+  pagination.textContent = `${page} / ${maxPage}`;
+});
+
 fetchCharacters();
 
-console.log("fetchCharacters", fetchCharacters());
-console.log("fetchCharacters", typeof fetchCharacters());
+function createCharacterCards(results) {
+  cardContainer.innerHTML = "";
+
+  results.forEach((character) => {
+    const image = character.image;
+    const name = character.name;
+    const status = character.status;
+    const type = character.type;
+    const occurrences = character.episode.length;
+
+    createCharacterCard(image, name, status, type, occurrences);
+  });
+}
