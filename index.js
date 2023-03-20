@@ -9,7 +9,7 @@ const searchBarContainer = document.querySelector(
   '[data-js="search-bar-container"]'
 );
 
-//extra
+//extra: create HTML elements
 
 createSearchBar(searchBarContainer);
 createButton(navigation, "previous", "button button--prev", "button-prev");
@@ -20,8 +20,9 @@ const searchBar = document.querySelector('[data-js="search-bar"]');
 const prevButton = document.querySelector('[data-js="button-prev"]');
 const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
+
 // States
-let maxPage = 42;
+let maxPage = "42";
 let page = 1;
 let searchQuery = "";
 let urlAll = `https://rickandmortyapi.com/api/character/?page=${page}`;
@@ -30,8 +31,8 @@ const fetchCharacters = async () => {
   try {
     const response = await fetch(urlAll);
     const jsonData = await response.json();
-    const results = await jsonData.results;
     pagination.textContent = `${page} / ${maxPage}`;
+    const results = await jsonData.results;
 
     createCharacterCards(results);
   } catch {
@@ -84,6 +85,4 @@ searchBar.addEventListener("submit", (event) => {
   urlAll = `https://rickandmortyapi.com/api/character/?page=${page}&name=${searchQuery}`;
 
   fetchCharacters();
-  console.log("data:", data);
-  console.log("urlAll:", urlAll);
 });
