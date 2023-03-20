@@ -16,13 +16,32 @@ const page = 1;
 const searchQuery = "";
 
 const cardsUrl =
-  "https://rickandmortyapi.com/api/character/1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20";
+  "https://rickandmortyapi.com/api/character/1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20?page=<pageIndex>";
 
 const fetchCharacters = async () => {
+  const cards = document.querySelector('[data-js="card-container"]');
   try {
     const response = await fetch(cardsUrl);
     const jsonData = await response.json();
-    return jsonData;
+
+    console.log(jsonData);
+
+    cards.innerHTML = "";
+
+    jsonData.forEach((character) => {
+      const image = character.image;
+      console.log(character.image);
+      const name = character.name;
+      console.log(character.name);
+      const status = character.status;
+      console.log(character.status);
+      const type = character.type;
+      console.log(character.type);
+      const occurrences = character.episode.length;
+      console.log(occurrences);
+
+      createCharacterCard(image, name, status, type, occurrences);
+    });
   } catch {
     console.log("Something went wrong");
   }
@@ -31,21 +50,3 @@ fetchCharacters();
 
 console.log("fetchCharacters", fetchCharacters());
 console.log("fetchCharacters", typeof fetchCharacters());
-
-// jsonData.forEach((character) => {
-//   const image = character.image;
-//   console.log(character.image);
-//   const name = character.name;
-//   console.log(character.name);
-//   const status = character.status;
-//   console.log(character.status);
-//   const type = character.type;
-//   console.log(character.type);
-//   const occurrences = character.occurrences;
-//   console.log(character.occurrences);
-
-//   const characterData = [];
-//   characterData.push(image, name, status, type, occurrences);
-
-//   characters.push(characterData);
-// });
