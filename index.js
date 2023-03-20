@@ -1,27 +1,37 @@
 import { createCharacterCard } from "./components/card/card.js";
+import { createButton } from "./components/nav-button/nav-button.js";
+import { createPagination } from "./components/nav-pagination/nav-pagination.js";
+import { createSearchBar } from "./components/search-bar/search-bar.js";
 
+const navigation = document.querySelector('[data-js="navigation"]');
 const cardContainer = document.querySelector('[data-js="card-container"]');
 const searchBarContainer = document.querySelector(
   '[data-js="search-bar-container"]'
 );
+
+//extra
+
+createSearchBar(searchBarContainer);
+createButton(navigation, "previous", "button button--prev", "button-prev");
+createPagination(navigation);
+createButton(navigation, "next", "button button--next", "button-next");
+
 const searchBar = document.querySelector('[data-js="search-bar"]');
-const navigation = document.querySelector('[data-js="navigation"]');
 const prevButton = document.querySelector('[data-js="button-prev"]');
 const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
-
 // States
 let maxPage = 42;
 let page = 1;
 let searchQuery = "";
 let urlAll = `https://rickandmortyapi.com/api/character/?page=${page}`;
-pagination.textContent = `${page} / ${maxPage}`;
 
 const fetchCharacters = async () => {
   try {
     const response = await fetch(urlAll);
     const jsonData = await response.json();
     const results = await jsonData.results;
+    pagination.textContent = `${page} / ${maxPage}`;
 
     createCharacterCards(results);
   } catch {
@@ -60,7 +70,7 @@ function createCharacterCards(results) {
     const type = character.type;
     const occurrences = character.episode.length;
 
-    createCharacterCard(image, name, status, type, occurrences);
+    createCharacterCard(cardContainer, image, name, status, type, occurrences);
   });
 }
 
@@ -77,27 +87,3 @@ searchBar.addEventListener("submit", (event) => {
   console.log("data:", data);
   console.log("urlAll:", urlAll);
 });
-
-console.log("searchQuery:", searchQuery);
-// CJ's forbidden code
-
-// async function fetchCharacters() {
-//   const response = await fetch(urlAll);
-//   const jsonData = await response.json();
-//   const results = jsonData.results;
-
-//   cardContainer.innerHTML = "";
-//   results.map(createCharacterCard).forEach((card) => cardContainer.append(card));
-// }
-
-// const fetchCharacters = async () => {
-//   try {
-//     const response = await fetch(urlAll);
-//     const jsonData = await response.json();
-//     const results = await jsonData.results;
-
-//     createCharacterCards(results);
-//   } catch {
-//     console.log("Something went wrong");
-//   }
-// };
