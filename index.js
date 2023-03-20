@@ -44,7 +44,7 @@ prevButton.addEventListener("click", () => {
     return;
   }
   page--;
-  urlAll = `https://rickandmortyapi.com/api/character/?page=${page}`;
+  urlAll = `https://rickandmortyapi.com/api/character/?page=${page}&name=${searchQuery}`;
   fetchCharacters();
   pagination.textContent = `${page} / ${maxPage}`;
 });
@@ -53,7 +53,6 @@ fetchCharacters();
 
 function createCharacterCards(results) {
   cardContainer.innerHTML = "";
-
   results.forEach((character) => {
     const image = character.image;
     const name = character.name;
@@ -64,3 +63,41 @@ function createCharacterCards(results) {
     createCharacterCard(image, name, status, type, occurrences);
   });
 }
+
+searchBar.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const searchInput = new FormData(searchBar);
+  const data = Object.fromEntries(searchInput);
+  searchQuery = data.query;
+
+  urlAll = `https://rickandmortyapi.com/api/character/?page=${page}&name=${searchQuery}`;
+
+  fetchCharacters();
+  console.log("data:", data);
+  console.log("urlAll:", urlAll);
+});
+
+console.log("searchQuery:", searchQuery);
+// CJ's forbidden code
+
+// async function fetchCharacters() {
+//   const response = await fetch(urlAll);
+//   const jsonData = await response.json();
+//   const results = jsonData.results;
+
+//   cardContainer.innerHTML = "";
+//   results.map(createCharacterCard).forEach((card) => cardContainer.append(card));
+// }
+
+// const fetchCharacters = async () => {
+//   try {
+//     const response = await fetch(urlAll);
+//     const jsonData = await response.json();
+//     const results = await jsonData.results;
+
+//     createCharacterCards(results);
+//   } catch {
+//     console.log("Something went wrong");
+//   }
+// };
